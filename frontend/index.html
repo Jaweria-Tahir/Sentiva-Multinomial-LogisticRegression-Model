@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Sentiva Browser Tab Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'><path fill='%23a3005c' d='M16 28.2C10.7 24 1 16.8 1 9.4 1 4.7 4.6 1 9.2 1c2.7 0 5.1 1.3 6.8 3.4C17.7 2.3 20.1 1 22.8 1 27.4 1 31 4.7 31 9.4c0 7.4-9.7 14.6-15 18.8Z'/></svg>">
+<title>Sentiva — Women Clothing E-Commerce Review Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Quicksand:wght@500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     SENTIVA — design tokens
+     ========================================================= */
+  :root{
+    --bg-top:#f9d9ea;
+    --bg-bottom:#f3c4de;
+    --window:#f6d2e6;
+    --card:#fdf1f8;
+    --card-border:#f5c9dc;
+    --accent:#a3005c;
+    --accent-dark:#7a0045;
+    --accent-soft:#f4c7dd;
+    --accent-softer:#fbe9f2;
+    --text-primary:#5c0836;
+    --text-secondary:#8a5270;
+    --text-faint:#c793ae;
+
+    --positive:#3f9463;
+    --positive-bg:#e7f5ec;
+    --negative:#d64550;
+    --negative-bg:#fbe7e8;
+    --neutral:#bd8a2e;
+    --neutral-bg:#fbf1de;
+
+    --radius-lg:30px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    --shadow-card:0 20px 45px -18px rgba(122,0,69,0.35);
+    --shadow-btn:0 10px 22px -8px rgba(122,0,69,0.55);
+
+    --font-display:'Quicksand', sans-serif;
+    --font-wordmark:'Cormorant Garamond', serif;
+    --font-body:'Poppins', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100svh;
+    font-family:var(--font-body);
+    color:var(--text-primary);
+    background:linear-gradient(165deg, var(--bg-top), var(--bg-bottom));
+    background-attachment:fixed;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  .page{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  /* ---------- brand header ---------- */
+  .brand{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .brand-mark{
+    width:22px;height:22px;flex:0 0 auto;
+    margin-bottom:6px;
+    animation:heartbeat 2.6s ease-in-out infinite;
+  }
+  .brand-mark path{ fill:var(--accent); }
+  @keyframes heartbeat{
+    0%,100%{transform:scale(1);}
+    12%{transform:scale(1.14);}
+    24%{transform:scale(0.98);}
+    36%{transform:scale(1.08);}
+    48%{transform:scale(1);}
+  }
+  .brand h1{
+    font-family:var(--font-wordmark);
+    font-style:italic;
+    font-weight:600;
+    font-size:clamp(42px,12vw,58px);
+    letter-spacing:0.5px;
+    margin:0;
+    line-height:1;
+    background:linear-gradient(115deg, var(--accent) 20%, var(--accent-dark) 80%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .tagline{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin:0 0 24px;
+  }
+  .tagline::before, .tagline::after{
+    content:"";
+    height:1px;
+    width:26px;
+    background:var(--accent);
+    opacity:0.55;
+  }
+  .subtitle{
+    text-align:center;
+    color:var(--accent-dark);
+    font-family:var(--font-display);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:2.4px;
+    text-transform:uppercase;
+    margin:0;
+  }
+
+  /* ---------- browser-style mockup shell ---------- */
+  .mockup-frame{
+    position:relative;
+    width:100%;
+  }
+  .mockup-frame::after{
+    content:"";
+    position:absolute;
+    top:14px; left:14px; right:-14px; bottom:-14px;
+    background:var(--accent-dark);
+    border-radius:var(--radius-lg);
+    z-index:0;
+  }
+  .mockup{
+    position:relative;
+    z-index:1;
+    width:100%;
+    background:var(--window);
+    border:3px solid var(--accent-dark);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-card);
+    overflow:hidden;
+  }
+  .chrome{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 18px;
+    background:var(--window);
+    border-bottom:2px solid var(--accent-dark);
+  }
+  .dots{display:flex; gap:6px;}
+  .dots span{width:9px;height:9px;border-radius:50%;display:block; background:rgba(122,0,69,0.35);}
+  .chrome-url{
+    flex:1;
+    text-align:center;
+    font-size:12px;
+    color:var(--accent-dark);
+    font-weight:500;
+    letter-spacing:0.3px;
+  }
+
+  .screen{ padding:30px 22px 32px; }
+  .screen[hidden]{ display:none; }
+
+  .content-card{
+    background:var(--card);
+    border:2px solid var(--accent);
+    border-radius:22px;
+    box-shadow:0 14px 30px -16px rgba(122,0,69,0.4);
+    padding:26px 22px;
+  }
+  .content-card--center{ text-align:center; }
+
+  /* ---------- screen 1: input ---------- */
+  .field-label{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:14px;
+    color:var(--text-primary);
+    margin:0 0 10px;
+  }
+
+  textarea{
+    width:100%;
+    min-height:130px;
+    resize:vertical;
+    border:1.5px solid var(--card-border);
+    border-radius:var(--radius-md);
+    padding:14px 16px;
+    font-family:var(--font-body);
+    font-size:14.5px;
+    color:var(--text-primary);
+    background:var(--accent-softer);
+    outline:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  textarea::placeholder{ color:var(--text-faint); }
+  textarea:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px rgba(184,0,88,0.12);
+    background:#fff;
+  }
+
+  .hint{
+    font-size:12px;
+    color:var(--text-faint);
+    margin:8px 2px 0;
+    min-height:16px;
+  }
+  .hint.error{ color:var(--negative); }
+
+  .btn-primary{
+    margin-top:20px;
+    width:100%;
+    border:none;
+    cursor:pointer;
+    background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color:#fff;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:15.5px;
+    letter-spacing:0.3px;
+    padding:14px 18px;
+    border-radius:999px;
+    box-shadow:var(--shadow-btn);
+    transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); filter:brightness(1.05); }
+  .btn-primary:active{ transform:translateY(0px) scale(0.99); }
+  .btn-primary:focus-visible{ outline:2px solid var(--accent-dark); outline-offset:3px; }
+
+  .btn-secondary{
+    margin-top:22px;
+    width:100%;
+    border:1.5px solid var(--accent);
+    background:#fff;
+    color:var(--accent);
+    cursor:pointer;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:15px;
+    padding:12.5px 18px;
+    border-radius:999px;
+    transition:background .15s ease, color .15s ease, transform .15s ease;
+  }
+  .btn-secondary:hover{ background:var(--accent); color:#fff; transform:translateY(-1px); }
+  .btn-secondary:focus-visible{ outline:2px solid var(--accent-dark); outline-offset:3px; }
+
+  /* ---------- screen 2: loading ---------- */
+  .loading-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:46px 10px 40px;
+    text-align:center;
+  }
+  .loader{
+    position:relative;
+    width:78px; height:78px;
+    margin-bottom:22px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .loader .ring{
+    position:absolute; inset:0;
+    border:3px solid var(--accent-soft);
+    border-top-color:var(--accent);
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+  }
+  .loader svg{ width:30px; height:30px; animation:pulse 1s ease-in-out infinite; }
+  .loader path{ fill:var(--accent); }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); opacity:1;} 50%{ transform:scale(1.18); opacity:0.75;} }
+
+  .loading-text{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:15px;
+    color:var(--accent);
+  }
+  .loading-sub{
+    font-size:12.5px;
+    color:var(--text-secondary);
+    margin-top:6px;
+  }
+
+  /* ---------- screen 3: results ---------- */
+  .result-header{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .result-title{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:22px;
+    color:var(--accent-dark);
+    margin:0;
+  }
+
+  /* boutique price-tag signature element */
+  .mood-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 14px;
+    border-radius:999px;
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:12.5px;
+    white-space:nowrap;
+    position:relative;
+    box-shadow:0 4px 10px -4px rgba(0,0,0,0.18);
+  }
+  .mood-tag::before{
+    content:"";
+    width:7px;height:7px;
+    border-radius:50%;
+    background:#fff;
+    border:1.5px solid currentColor;
+    display:inline-block;
+  }
+  .mood-tag.positive{ background:var(--positive-bg); color:var(--positive); }
+  .mood-tag.negative{ background:var(--negative-bg); color:var(--negative); }
+  .mood-tag.neutral{ background:var(--neutral-bg); color:var(--neutral); }
+
+  .prob-block{ margin-bottom:20px; text-align:left; }
+  .prob-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:9px;
+    font-size:12.5px;
+  }
+  .prob-label{
+    width:78px;
+    flex:0 0 auto;
+    text-transform:capitalize;
+    color:var(--text-secondary);
+    font-weight:500;
+  }
+  .prob-track{
+    flex:1;
+    height:8px;
+    background:var(--accent-softer);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .prob-fill{
+    height:100%;
+    border-radius:999px;
+    width:0%;
+    transition:width .8s cubic-bezier(.2,.8,.2,1);
+    background:var(--accent);
+  }
+  .prob-pct{ width:38px; flex:0 0 auto; text-align:right; color:var(--text-primary); font-weight:600; }
+
+  .review-quote{
+    font-style:italic;
+    font-size:14.5px;
+    line-height:1.65;
+    color:var(--text-primary);
+    padding:0 4px;
+    margin:0;
+  }
+
+  .api-note{
+    font-size:11px;
+    color:var(--text-faint);
+    text-align:center;
+    margin-top:14px;
+  }
+
+  /* ---------- responsive tuning ---------- */
+  @media (max-width:380px){
+    .screen{ padding:20px 16px 22px; }
+    .brand h1{ font-size:36px; }
+    .prob-label{ width:64px; font-size:11.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 28.2C10.7 24 1 16.8 1 9.4 1 4.7 4.6 1 9.2 1c2.7 0 5.1 1.3 6.8 3.4C17.7 2.3 20.1 1 22.8 1 27.4 1 31 4.7 31 9.4c0 7.4-9.7 14.6-15 18.8Z"/>
+    </svg>
+    <h1>Sentiva</h1>
+  </div>
+  <p class="tagline"><span class="subtitle">Women Clothing Review Analyzer</span></p>
+
+  <div class="mockup-frame">
+  <div class="mockup">
+    <div class="chrome">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="chrome-url">sentiva.app</div>
+    </div>
+
+    <!-- SCREEN 1 — INPUT -->
+    <section class="screen" id="screen-input">
+      <div class="content-card">
+        <p class="field-label">Your review</p>
+        <textarea id="review-text" placeholder="Paste or type your product review here..."></textarea>
+        <p class="hint" id="input-hint">&nbsp;</p>
+
+        <button class="btn-primary" id="analyze-btn" type="button">Analyze Review</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2 — LOADING -->
+    <section class="screen" id="screen-loading" hidden>
+      <div class="loading-wrap">
+        <div class="loader">
+          <div class="ring"></div>
+          <svg viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 28.2C10.7 24 1 16.8 1 9.4 1 4.7 4.6 1 9.2 1c2.7 0 5.1 1.3 6.8 3.4C17.7 2.3 20.1 1 22.8 1 27.4 1 31 4.7 31 9.4c0 7.4-9.7 14.6-15 18.8Z"/>
+          </svg>
+        </div>
+        <p class="loading-text">Sentiva is analyzing sentiment &amp; feedback<span id="dots"></span></p>
+        <p class="loading-sub">Reading tone, fit &amp; fabric cues from your review</p>
+      </div>
+    </section>
+
+    <!-- SCREEN 3 — RESULTS -->
+    <section class="screen" id="screen-results" hidden>
+      <div class="content-card content-card--center">
+        <div class="result-header">
+          <h2 class="result-title">Customer Review</h2>
+          <span class="mood-tag" id="mood-tag">Mood</span>
+        </div>
+
+        <div class="prob-block" id="prob-block"></div>
+
+        <blockquote class="review-quote" id="review-quote"></blockquote>
+      </div>
+
+      <button class="btn-secondary" id="reset-btn" type="button">Analyze Another Review</button>
+      <p class="api-note" id="api-note" hidden>Showing demo data — couldn't reach the Sentiva API.</p>
+    </section>
+
+  </div>
+  </div>
+</div>
+
+<script>
+(function(){
+
+  /* =========================================================
+     CONFIG — point this at your FastAPI backend.
+     The backend's CORS in main.py currently allows only
+     http://localhost:5500, so serve this file from that
+     origin (e.g. VS Code "Live Server") or add your own
+     origin to the `origins` list in app/main.py.
+     ========================================================= */
+  const CONFIG = {
+    API_BASE_URL: "http://127.0.0.1:8000",
+    PREDICT_ENDPOINT: "/predict",
+    USE_LIVE_API: true,      // false = always use local mock data
+    MIN_LOADING_MS: 1600     // keeps the loader from flashing too fast
+  };
+
+  const screens = {
+    input: document.getElementById('screen-input'),
+    loading: document.getElementById('screen-loading'),
+    results: document.getElementById('screen-results'),
+  };
+  function showScreen(name){
+    Object.entries(screens).forEach(([key, el]) => { el.hidden = key !== name; });
+  }
+
+  /* ---------- validation + submit ---------- */
+  const textarea = document.getElementById('review-text');
+  const hint = document.getElementById('input-hint');
+  const analyzeBtn = document.getElementById('analyze-btn');
+
+  function setHint(msg){ hint.textContent = msg; hint.classList.add('error'); }
+  function clearHint(){ hint.textContent = '\u00A0'; hint.classList.remove('error'); }
+
+  analyzeBtn.addEventListener('click', async () => {
+    const text = textarea.value.trim();
+    if(text.length === 0){ setHint('Please write a review before analyzing.'); return; }
+    clearHint();
+
+    showScreen('loading');
+    animateDots();
+
+    const started = Date.now();
+    let result, usedFallback = false;
+
+    try{
+      result = await analyzeReview(text);
+    }catch(err){
+      console.warn('Sentiva API unreachable, using demo data:', err);
+      result = mockAnalyze(text);
+      usedFallback = true;
+    }
+
+    const elapsed = Date.now() - started;
+    const wait = Math.max(0, CONFIG.MIN_LOADING_MS - elapsed);
+    setTimeout(() => renderResults(result, usedFallback), wait);
+  });
+
+  /* ---------- API call (wired to /predict) ---------- */
+  async function analyzeReview(text){
+    if(!CONFIG.USE_LIVE_API) throw new Error('Live API disabled');
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+
+    const res = await fetch(CONFIG.API_BASE_URL + CONFIG.PREDICT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    if(!res.ok){
+      throw new Error('API responded with status ' + res.status);
+    }
+    // Expected shape from backend/app/schemas.py -> ReviewResponse:
+    // { review: string, sentiment: string, probabilities: { [label]: number } }
+    return res.json();
+  }
+
+  /* ---------- offline fallback so the UI always works ----------
+     Mirrors the real model: binary classes "Positive" / "Not Positive"
+     (see ml_training notebook: to_sentiment -> Rating >= 4). */
+  function mockAnalyze(text){
+    const lower = text.toLowerCase();
+    const positiveHits = ['love','great','perfect','beautiful','comfortable','soft'].filter(w => lower.includes(w)).length;
+    const negativeHits = ['bad','cheap','broke','disappoint','itchy','return'].filter(w => lower.includes(w)).length;
+
+    let sentiment, probs;
+    if(positiveHits >= negativeHits){
+      sentiment = 'Positive';
+      probs = { Positive: 0.82, 'Not Positive': 0.18 };
+    } else {
+      sentiment = 'Not Positive';
+      probs = { Positive: 0.21, 'Not Positive': 0.79 };
+    }
+    return { review: text, sentiment, probabilities: probs };
+  }
+
+  /* ---------- loading dots ---------- */
+  function animateDots(){
+    const el = document.getElementById('dots');
+    let n = 0;
+    const id = setInterval(() => {
+      if(screens.loading.hidden){ clearInterval(id); return; }
+      n = (n + 1) % 4;
+      el.textContent = '.'.repeat(n);
+    }, 400);
+  }
+
+  /* ---------- render results (screen 3) ---------- */
+  function renderResults(result, usedFallback){
+    const sentiment = (result.sentiment || 'Not Positive').toString();
+    const isPositive = sentiment.trim().toLowerCase() === 'positive';
+    const moodClass = isPositive ? 'positive' : 'negative';
+
+    const moodTag = document.getElementById('mood-tag');
+    moodTag.textContent = 'Mood: ' + sentiment;
+    moodTag.className = 'mood-tag ' + moodClass;
+
+    // probability bars
+    const probBlock = document.getElementById('prob-block');
+    probBlock.innerHTML = '';
+    const probs = result.probabilities || {};
+    Object.entries(probs)
+      .sort((a,b) => b[1]-a[1])
+      .forEach(([label, value]) => {
+        const pct = Math.round(value * 100);
+        const row = document.createElement('div');
+        row.className = 'prob-row';
+        row.innerHTML =
+          '<span class="prob-label">' + label + '</span>' +
+          '<span class="prob-track"><span class="prob-fill" data-pct="' + pct + '"></span></span>' +
+          '<span class="prob-pct">' + pct + '%</span>';
+        probBlock.appendChild(row);
+      });
+
+    document.getElementById('review-quote').textContent = '\u201C' + (result.review || textarea.value) + '\u201D';
+    document.getElementById('api-note').hidden = !usedFallback;
+
+    showScreen('results');
+
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.prob-fill').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+    });
+  }
+
+  /* ---------- reset ---------- */
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    textarea.value = '';
+    clearHint();
+    showScreen('input');
+  });
+})();
+</script>
+</body>
+</html>
