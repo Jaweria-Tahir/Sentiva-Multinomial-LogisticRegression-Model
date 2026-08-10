@@ -8,6 +8,8 @@ app = FastAPI(
 )
 
 origins = [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
     "https://sentiva-multinomial-logistic-regres.vercel.app"
 ]
 app.add_middleware(
