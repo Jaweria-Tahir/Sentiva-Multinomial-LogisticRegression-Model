@@ -67,17 +67,19 @@ This keeps only lowercase alphabetic characters and single spaces, producing cle
 ### 6. Feature Engineering — TF-IDF Vectorization
 
 A couple of things worth calling out here:
-I kept negation words (not, no, never, etc.) out of the stopword list. Normally you'd remove them, but stuff like "not soft" means the opposite of "soft" — dropping "not" would confuse the model.
-I used ngram_range=(1,2) so it picks up two-word phrases like "runs small" or "not soft", not just single words.
-Capped it at max_features=10000 so the vocab doesn't get too huge.
-Only fit the vectorizer on the training data, then just transformed the test data with it — fitting on the test set too would leak information into the model.
+
+- I kept negation words (`not`, `no`, `never`, etc.) out of the stopword list. Normally you'd remove them, but stuff like "not soft" means the opposite of "soft" — dropping "not" would confuse the model.
+- I used `ngram_range=(1,2)` so it picks up two-word phrases like "runs small" or "not soft", not just single words.
+- Capped it at `max_features=10000` so the vocab doesn't get too huge.
+- Only fit the vectorizer on the training data, then just transformed the test data with it — fitting on the test set too would leak information into the model.
 
 ### 7. Model — Logistic Regression
 
-Just a plain LogisticRegression from sklearn trained on the TF-IDF features. A few tweaks I made:
-C=0.5 to add a bit more regularization since there are 10k+ features and I didn't want it overfitting.
-class_weight='balanced' because the dataset has way more positive reviews than negative ones — without this the model would just lean toward predicting "Positive" most of the time.
-max_iter=1000 because it wasn't converging with the default number of iterations.
+Just a plain `LogisticRegression` from sklearn trained on the TF-IDF features. A few tweaks I made:
+
+- `C=0.5` to add a bit more regularization since there are 10k+ features and I didn't want it overfitting.
+- `class_weight='balanced'` because the dataset has way more positive reviews than negative ones — without this the model would just lean toward predicting "Positive" most of the time.
+- `max_iter=1000` because it wasn't converging with the default number of iterations.
 
 ### 8. Evaluation
 
