@@ -1,10 +1,12 @@
 # Sentiva — Women's Clothing Review Sentiment Analyzer
 
 Sentiva is an end-to-end machine learning project that classifies women's clothing e-commerce reviews as **Positive** or **Not Positive** using a **Logistic Regression** classifier trained on TF-IDF text features. It was built primarily as an **ML practice project**, covering the full pipeline: data cleaning, EDA, feature engineering, model training/evaluation, and deployment behind a FastAPI backend with a lightweight HTML/JS frontend.
+
 ---
 
 ##  Project Link
 https://sentiva-multinomial-logistic-regres.vercel.app/
+
 ---
 
 
